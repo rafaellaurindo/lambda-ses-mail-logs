@@ -44,7 +44,7 @@ const handleDeliveryEvent = (rawMessage) => {
 const handleDeliveryDelayEvent = (rawMessage) => {
   const { mail, deliveryDelay } = rawMessage;
 
-  const { expirationTime, delayType } = delivery;
+  const { expirationTime, delayType } = deliveryDelay;
 
   console.log({
     type: "DELIVERY_DELAY",
@@ -69,13 +69,13 @@ export const handler = async (event) => {
       handleDeliveryDelayEvent(snsEventData);
       break;
     default:
-      console.error("Unknown notification type", { snsEventData });
+    console.error("Unknown notification type", { snsEventData });
   }
 
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify({ message: "Success" }),
-  };
+    const response = {
+      statusCode: 200,
+      body: JSON.stringify({ message: "Success" }),
+    };
 
-  return response;
+    return response;
 };
