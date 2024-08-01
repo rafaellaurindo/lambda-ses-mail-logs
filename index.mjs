@@ -41,6 +41,20 @@ const handleDeliveryEvent = (rawMessage) => {
   });
 };
 
+const handleDeliveryDelayEvent = (rawMessage) => {
+  const { mail, deliveryDelay } = rawMessage;
+
+  const { expirationTime, delayType } = delivery;
+
+  console.log({
+    type: "DELIVERY_DELAY",
+    ...getMailData(mail),
+    result: "FAILURE",
+    expirationTime,
+    delayType,
+  });
+};
+
 export const handler = async (event) => {
   const snsEventData = JSON.parse(event.Records[0].Sns.Message);
 
@@ -51,8 +65,11 @@ export const handler = async (event) => {
     case "Delivery":
       handleDeliveryEvent(snsEventData);
       break;
+    case "DeliveryDelay":
+      handleDeliveryDelayEvent(snsEventData);
+      break;
     default:
-      console.log("Unknown notification type", { snsEventData });
+      console.error("Unknown notification type", { snsEventData });
   }
 
   const response = {
