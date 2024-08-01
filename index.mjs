@@ -55,6 +55,22 @@ const handleDeliveryDelayEvent = (rawMessage) => {
   });
 };
 
+const handleBounceEvent = (rawMessage) => {
+  const { mail, bounce } = rawMessage;
+
+  const { feedbackId, bounceType, bounceSubType, reportingMTA } = bounce;
+
+  console.log({
+    type: "BOUNCE",
+    feedbackId,
+    ...getMailData(mail),
+    result: "FAILURE",
+    bounceType,
+    bounceSubType,
+    reportingMTA,
+  });
+};
+
 export const handler = async (event) => {
   const snsEventData = JSON.parse(event.Records[0].Sns.Message);
 
@@ -68,14 +84,18 @@ export const handler = async (event) => {
     case "DeliveryDelay":
       handleDeliveryDelayEvent(snsEventData);
       break;
+      break;
+    case "Bounce":
+      handleBounceEvent(snsEventData);
+      break;
     default:
-    console.error("Unknown notification type", { snsEventData });
+      console.error("Unknown notification type", { snsEventData });
   }
 
-    const response = {
-      statusCode: 200,
-      body: JSON.stringify({ message: "Success" }),
-    };
+  const response = {
+    statusCode: 200,
+    body: JSON.stringify({ message: "Success" }),
+  };
 
-    return response;
+  return response;
 };
