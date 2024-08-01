@@ -74,28 +74,34 @@ const handleBounceEvent = (rawMessage) => {
 export const handler = async (event) => {
   const snsEventData = JSON.parse(event.Records[0].Sns.Message);
 
-  switch (snsEventData.eventType) {
-    case "Send":
-      handleSendEvent(snsEventData);
-      break;
-    case "Delivery":
-      handleDeliveryEvent(snsEventData);
-      break;
-    case "DeliveryDelay":
-      handleDeliveryDelayEvent(snsEventData);
-      break;
-      break;
-    case "Bounce":
-      handleBounceEvent(snsEventData);
-      break;
-    default:
-      console.error("Unknown notification type", { snsEventData });
+  const { eventType } = snsEventData;
+
+  const handler = {
+    Send: handleSendEvent,
+    Delivery: handleDeliveryEvent,
+    DeliveryDelay: handleDeliveryDelayEvent,
+    Bounce: handleBounceEvent,
+  }[eventType];
+
+  if (!handler) {
+    console.error("Unknown notification type", { snsEventData });
+    return;
   }
 
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify({ message: "Success" }),
-  };
+  try {
+    handler(snsEventData);
+    const response = {
+      statusCode: 200,
+      body: JSON.stringify({ message: "Success" }),
+    };
 
-  return response;
+    return response;
+  } catch (error) {
+    console.error("Error", { error });
+
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: "Error" }),
+    };
+  }
 };
