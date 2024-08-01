@@ -2,7 +2,7 @@
 
 [![GitHub stars](https://img.shields.io/github/stars/rafaellaurindo/lambda-ses-mail-logs.svg)](Stars)
 [![GitHub issues](https://img.shields.io/github/issues/rafaellaurindo/lambda-ses-mail-logs.svg)](Issues)
-[![GitHub license](https://img.shields.io/github/license/rafaellaurindo/lambda-ses-mail-logs.svg)](MIT)
+![GitHub License](https://img.shields.io/github/license/rafaellaurindo/lambda-ses-mail-logs)
 
 Lambda function to log SES emails sent through SNS to Cloudwatch.
 
@@ -31,4 +31,4 @@ Lambda function to log SES emails sent through SNS to Cloudwatch.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
