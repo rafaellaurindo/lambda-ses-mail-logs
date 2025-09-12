@@ -1,6 +1,8 @@
 const getMailData = (mail) => {
   const destination = mail.destination[0];
-  const { timestamp } = mail;
+  const { timestamp, tags: mailTags } = mail;
+
+  Object.keys(mailTags).forEach(tag => mailTags[tag] = mailTags[tag].join(','))
 
   let [fromName, fromEmail] = mail.source.split("<");
 
@@ -16,6 +18,7 @@ const getMailData = (mail) => {
     fromEmail,
     subject,
     timestamp,
+    mailTags,
   };
 };
 
