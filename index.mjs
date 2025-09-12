@@ -10,6 +10,7 @@ const getMailData = (mail) => {
   const subject = mail.commonHeaders.subject;
 
   return {
+    messageId: mail.messageId,
     destination,
     fromName,
     fromEmail,
@@ -71,6 +72,36 @@ const handleBounceEvent = (rawMessage) => {
   });
 };
 
+const handleOpenEvent = (rawMessage) => {
+  const { mail, open: openData } = rawMessage;
+
+  const { timestamp: openedAt, ipAddress, userAgent } = openData;
+
+  console.log({
+    type: "OPEN",
+    ...getMailData(mail),
+    openedAt,
+    ipAddress,
+    userAgent,
+  });
+};
+
+const handleClickEvent = (rawMessage) => {
+  const { mail, click: clickData } = rawMessage;
+
+  const { timestamp: clickedAt, ipAddress, userAgent, link, linkTags } = clickData;
+
+  console.log({
+    type: "CLICK",
+    ...getMailData(mail),
+    clickedAt,
+    ipAddress,
+    userAgent,
+    link,
+    linkTags,
+  });
+};
+
 export const handler = async (event) => {
   const snsEventData = JSON.parse(event.Records[0].Sns.Message);
 
@@ -81,6 +112,8 @@ export const handler = async (event) => {
     Delivery: handleDeliveryEvent,
     DeliveryDelay: handleDeliveryDelayEvent,
     Bounce: handleBounceEvent,
+    Open: handleOpenEvent,
+    Click: handleClickEvent,
   }[eventType];
 
   if (!handler) {
